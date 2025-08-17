@@ -52,85 +52,154 @@ export function AdminLayout() {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-50 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-50 bg-black/50 xl:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border/50 shadow-lg transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 lg:static lg:inset-0
-      `}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border/50 bg-gradient-hero">
-          <div className="text-center w-full">
-            <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
-            <p className="text-primary-foreground/80 text-sm">Content Management</p>
+      {/* Desktop Grid Layout */}
+      <div className="hidden xl:grid xl:grid-cols-[260px_1fr] xl:h-screen">
+        {/* Desktop Sidebar */}
+        <div className="bg-card border-r border-border/50 shadow-lg flex flex-col">
+          {/* Sidebar Header */}
+          <div className="p-5 border-b border-border/50 bg-gradient-hero">
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+              <p className="text-primary-foreground/80 text-sm">Content Management</p>
+            </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden text-white hover:bg-white/10"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-        
-        {/* Navigation */}
-        <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
-          {adminNavItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`
-                  flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
-                  ${active 
-                    ? 'bg-primary text-primary-foreground shadow-md' 
-                    : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
-                  }
-                `}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <Icon className={`h-5 w-5 ${active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+          
+          {/* Navigation */}
+          <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+            {adminNavItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`
+                    flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                    ${active 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
+                    }
+                  `}
+                >
+                  <Icon className={`h-5 w-5 ${active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-border/50 bg-muted/20">
-          <div className="text-sm text-muted-foreground mb-3 px-2">
-            <div className="font-medium">Signed in as:</div>
-            <div className="truncate">{profile?.email}</div>
+          {/* Sidebar Footer */}
+          <div className="p-4 border-t border-border/50 bg-muted/20">
+            <div className="text-sm text-muted-foreground mb-3 px-2">
+              <div className="font-medium">Signed in as:</div>
+              <div className="truncate">{profile?.email}</div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOut}
+              className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={signOut}
-            className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+        </div>
+
+        {/* Desktop Content Area */}
+        <div className="flex flex-col overflow-hidden">
+          {/* Top Header */}
+          <div className="h-16 bg-background/80 backdrop-blur-sm border-b border-border/50 px-6 flex items-center justify-end shrink-0">
+            <div className="text-sm text-muted-foreground">
+              Manage your website content and settings
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto p-6">
+            <Outlet />
+          </main>
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="lg:ml-72">
-        {/* Top bar */}
-        <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border/50 px-6 py-4">
-          <div className="flex items-center justify-between">
+      {/* Tablet Layout (lg to xl) */}
+      <div className="hidden lg:block xl:hidden">
+        {/* Mobile Sidebar */}
+        <div className={`
+          fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border/50 shadow-lg transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}>
+          {/* Sidebar Header */}
+          <div className="flex items-center justify-between p-5 border-b border-border/50 bg-gradient-hero">
+            <div className="text-center flex-1">
+              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+              <p className="text-primary-foreground/80 text-sm">Content Management</p>
+            </div>
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden"
+              className="text-white hover:bg-white/10"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          {/* Navigation */}
+          <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+            {adminNavItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`
+                    flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                    ${active 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
+                    }
+                  `}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <Icon className={`h-5 w-5 ${active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-border/50 bg-muted/20">
+            <div className="text-sm text-muted-foreground mb-3 px-2">
+              <div className="font-medium">Signed in as:</div>
+              <div className="truncate">{profile?.email}</div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOut}
+              className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+
+        {/* Tablet Content */}
+        <div className="flex flex-col min-h-screen">
+          {/* Top Header */}
+          <div className="h-16 bg-background/80 backdrop-blur-sm border-b border-border/50 px-4 flex items-center justify-between shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu className="h-5 w-5" />
@@ -139,12 +208,101 @@ export function AdminLayout() {
               Manage your website content and settings
             </div>
           </div>
+
+          {/* Main Content */}
+          <main className="flex-1 p-4">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+
+      {/* Mobile Layout (below lg) */}
+      <div className="block lg:hidden">
+        {/* Mobile Sidebar */}
+        <div className={`
+          fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border/50 shadow-lg transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}>
+          {/* Sidebar Header */}
+          <div className="flex items-center justify-between p-4 border-b border-border/50 bg-gradient-hero">
+            <div className="text-center flex-1">
+              <h1 className="text-lg font-bold text-white">Admin Panel</h1>
+              <p className="text-primary-foreground/80 text-xs">Content Management</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/10"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Navigation */}
+          <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
+            {adminNavItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`
+                    flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                    ${active 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
+                    }
+                  `}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <Icon className={`h-4 w-4 ${active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                  <span className="font-medium text-sm">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-border/50 bg-muted/20">
+            <div className="text-xs text-muted-foreground mb-3 px-2">
+              <div className="font-medium">Signed in as:</div>
+              <div className="truncate">{profile?.email}</div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOut}
+              className="w-full justify-start hover:bg-destructive hover:text-destructive-foreground text-xs"
+            >
+              <LogOut className="h-3 w-3 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
-        {/* Page content */}
-        <main className="p-6">
-          <Outlet />
-        </main>
+        {/* Mobile Content */}
+        <div className="flex flex-col min-h-screen">
+          {/* Top Header - Sticky */}
+          <div className="sticky top-0 z-40 h-14 bg-background/80 backdrop-blur-sm border-b border-border/50 px-4 flex items-center justify-between shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+            <div className="text-xs text-muted-foreground">
+              Manage content
+            </div>
+          </div>
+
+          {/* Main Content - No gap, starts directly below header */}
+          <main className="flex-1 p-4">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );
