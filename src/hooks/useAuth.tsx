@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchProfile(session.user.id);
+        await fetchProfileAndRole(session.user.id);
       }
       setIsLoading(false);
     };
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (session?.user) {
           setTimeout(() => {
-            fetchProfile(session.user.id);
+            fetchProfileAndRole(session.user.id);
           }, 0);
         } else {
           setProfile(null);
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfileAndRole = async (userId: string) => {
     try {
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setIsAdmin(!roleError && roleData !== null);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile and role:', error);
       setIsAdmin(false);
     }
   };

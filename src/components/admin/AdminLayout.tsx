@@ -89,9 +89,9 @@ export function AdminLayout() {
         </nav>
 
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
-          <div className="text-sm text-muted-foreground px-3">
-            Signed in as: {profile?.email}
-          </div>
+        <div className="text-sm text-muted-foreground px-3">
+          Signed in as: {profile?.email}
+        </div>
           <Button
             variant="outline"
             size="sm"
