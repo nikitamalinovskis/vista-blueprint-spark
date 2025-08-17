@@ -7,7 +7,6 @@ interface Profile {
   id: string;
   user_id: string;
   email: string;
-  role: 'admin' | 'user';
 }
 
 interface AuthContextType {
@@ -27,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -57,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }, 0);
         } else {
           setProfile(null);
+          setIsAdmin(false);
         }
         
         setIsLoading(false);
@@ -68,16 +69,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Fetch profile
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
         .single();
 
-      if (error) throw error;
-      setProfile(data as Profile);
+      if (profileError) throw profileError;
+      setProfile(profileData as Profile);
+
+      // Check if user has admin role
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .single();
+
+      setIsAdmin(!roleError && roleData !== null);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setIsAdmin(false);
     }
   };
 
@@ -164,8 +177,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
     }
   };
-
-  const isAdmin = profile?.role === 'admin';
 
   return (
     <AuthContext.Provider
