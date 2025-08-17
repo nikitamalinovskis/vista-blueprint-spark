@@ -14,7 +14,7 @@ interface ContactSettings {
   phone?: string;
   email?: string;
   map_embed?: string;
-  business_hours: any;
+  business_hours: Record<string, string>;
 }
 
 const defaultBusinessHours = {
@@ -59,7 +59,9 @@ export default function ContactEditor() {
       if (data) {
         setSettings({
           ...data,
-          business_hours: data.business_hours || defaultBusinessHours,
+          business_hours: (typeof data.business_hours === 'object' && data.business_hours) 
+            ? data.business_hours as Record<string, string>
+            : defaultBusinessHours,
         });
       }
     } catch (error) {
