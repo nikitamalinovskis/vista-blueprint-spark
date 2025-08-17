@@ -68,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const fetchProfileAndRole = async (userId: string) => {
+    console.log('🔍 Fetching profile and role for user:', userId);
     try {
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
@@ -76,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('user_id', userId)
         .single();
 
+      console.log('👤 Profile fetch result:', { profileData, profileError });
       if (profileError) throw profileError;
       setProfile(profileData as Profile);
 
@@ -87,9 +89,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('role', 'admin')
         .single();
 
-      setIsAdmin(!roleError && roleData !== null);
+      console.log('🔐 Role check result:', { roleData, roleError });
+      const adminStatus = !roleError && roleData !== null;
+      console.log('✅ Setting isAdmin to:', adminStatus);
+      setIsAdmin(adminStatus);
     } catch (error) {
-      console.error('Error fetching profile and role:', error);
+      console.error('❌ Error fetching profile and role:', error);
       setIsAdmin(false);
     }
   };
