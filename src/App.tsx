@@ -25,6 +25,14 @@ import HomepageEditor from "./pages/admin/HomepageEditor";
 import BlogList from "./pages/admin/BlogList";
 import BlogEditor from "./pages/admin/BlogEditor";
 import TestimonialEditor from "./pages/admin/TestimonialEditor";
+import ServicesManager from "./pages/admin/ServicesManager";
+import PricingManager from "./pages/admin/PricingManager";
+import AboutEditor from "./pages/admin/AboutEditor";
+import ContactEditor from "./pages/admin/ContactEditor";
+import Analytics from "./pages/admin/Analytics";
+import SiteSettings from "./pages/admin/SiteSettings";
+import MediaLibrary from "./pages/admin/MediaLibrary";
+import PagesManager from "./pages/admin/PagesManager";
 
 const queryClient = new QueryClient();
 
@@ -58,9 +66,17 @@ const App = () => (
             }>
               <Route index element={<Dashboard />} />
               <Route path="homepage" element={<HomepageEditor />} />
+              <Route path="services" element={<ServicesManager />} />
+              <Route path="pricing" element={<PricingManager />} />
               <Route path="blog" element={<BlogList />} />
               <Route path="blog/:id" element={<BlogEditor />} />
+              <Route path="about" element={<AboutEditor />} />
+              <Route path="contact" element={<ContactEditor />} />
+              <Route path="pages" element={<PagesManager />} />
               <Route path="testimonials" element={<TestimonialEditor />} />
+              <Route path="media" element={<MediaLibrary />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="settings" element={<SiteSettings />} />
             </Route>
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
